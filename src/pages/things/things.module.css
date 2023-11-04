@@ -1,0 +1,27 @@
+.titleRow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleRow > select {
+  max-height: 40px;
+}
+
+.thingsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 1%;
+  column-gap: 1%;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.flexRowWithSpacing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
