@@ -18,19 +18,36 @@ const things = [
   { thing: 'lianne-la-havas', type: 'album' },
 ];
 
+const hasMouseMovedInLastSixtSeconds = (lastTimeMouseMoved: number) => Date.now() - lastTimeMouseMoved < sixtySeconds;
+
 const Things = () => {
   const [filter, setFilter] = React.useState('');
+  const lastTimeMouseMoved = React.useRef(Date.now());
   const [shouldAnimate, setShouldAnimate] = React.useState(false);
 
+
   React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!shouldAnimate) {
+    // Add event listener to document to detect mouse movement
+    const handleMouseMove = () => {
+      setShouldAnimate(false);
+      lastTimeMouseMoved.current = Date.now();
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+     // If mouse hasn't moved after 60 seconds, start animation
+     const intervalId = setInterval(() => {
+      if (!hasMouseMovedInLastSixtSeconds(lastTimeMouseMoved.current)) {
         setShouldAnimate(true);
       }
-    }, sixtySeconds);
+    }, 10);
 
-    return () => clearTimeout(timeoutId);
-  }, [shouldAnimate]);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(intervalId);
+    }
+  }, []);
+
   
   return (
     <Page>
@@ -54,7 +71,7 @@ const Things = () => {
 
           
           return (
-            <WrapperComponent key={`${name}-${type}`} selector={`.${thing}`}>
+            <WrapperComponent key={`${thing}-${type}`} selector={`.${thing}`}>
               <Thing thing={thing} className={cx(shouldHide && classes.hidden)} />
             </WrapperComponent>
           )
